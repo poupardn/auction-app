@@ -1,4 +1,4 @@
-package com.auctioncorp.auctionbackend;
+package com.auctioncorp.auctionapp;
 
 import org.junit.Test;
 import org.junit.runner.RunWith;
@@ -14,4 +14,3 @@ public class DemoApplicationTests {
 	}
 
 }
-

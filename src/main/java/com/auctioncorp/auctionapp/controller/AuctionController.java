@@ -2,11 +2,16 @@ package com.auctioncorp.auctionapp.controller;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Optional;
+import java.util.UUID;
 
 import com.auctioncorp.auctionapp.model.AuctionItem;
 import com.auctioncorp.auctionapp.model.Bid;
 import com.auctioncorp.auctionapp.model.Item;
+import com.auctioncorp.auctionapp.repository.AuctionRepository;
+import com.google.common.collect.Lists;
 
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
@@ -16,6 +21,9 @@ import org.springframework.web.bind.annotation.RestController;
 
 @RestController
 public class AuctionController {
+
+    @Autowired
+    AuctionRepository auctionRepository;
 
     private List<AuctionItem> auctions;
 
@@ -28,26 +36,23 @@ public class AuctionController {
 
     @GetMapping("/auctionitems")
     public List<AuctionItem> getAllAuctions() {
+        List<AuctionItem> auctions = Lists.newArrayList(auctionRepository.findAll());
         return auctions;
     }
 
     @GetMapping("/auctionitems/{auctionitemid}")
     public AuctionItem getAuctionById(@PathVariable String auctionitemid) {
-        for (int i = 0; i < auctions.size(); i++) {
-            if (auctions.get(i).getAuctionItemId().equals(auctionitemid)) {
-
-                return auctions.get(i);
-            }
-        }
-        return null;
+        Optional<AuctionItem> newItem = auctionRepository.findById(auctionitemid);
+        return newItem.get();
     }
 
     @PostMapping("/auctionitems")
     @ResponseBody
     public String addAuctionItem(@RequestBody AuctionItem item) {
-        item.setAuctionItemId("09281");
-        auctions.add(item);
-        return item.getAuctionItemId();
+        item.setAuctionItemId(UUID.randomUUID().toString());
+        auctionRepository.save(item);
+        Optional<AuctionItem> newItem = auctionRepository.findById(item.getAuctionItemId());
+        return newItem.get().getAuctionItemId();
     }
 
     @PostMapping("/bids")

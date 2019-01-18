@@ -1,10 +1,13 @@
 package com.auctioncorp.auctionapp.model;
 
+import org.springframework.data.annotation.Id;
 import org.springframework.data.redis.core.RedisHash;
 
 @RedisHash("auctionitem")
 public class AuctionItem {
+    @Id
     private String auctionItemId;
+
     private Double reservePrice = 0.00;
     private Double currentBid = 0.00;
     private String currentBidder;
