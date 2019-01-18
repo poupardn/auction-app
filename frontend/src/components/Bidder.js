@@ -8,10 +8,6 @@ export default class Bidder extends React.Component {
         bidderName: '',
     }
 
-    handleChange = event => {
-        this.setState({ bidderName: event.target.value });
-    }
-
     render() {
         return (
             <div>
@@ -20,8 +16,9 @@ export default class Bidder extends React.Component {
                         <TextField style={{ padding: 24 }}
                             id="bidderNameInput"
                             placeholder="Enter Bidder Name to Bid..."
-                            margin="normal"
-                            onChange={this.handleChange} />
+                            margin="normal" />
+
+
                     </form>
                 ) : null}
             </div>
