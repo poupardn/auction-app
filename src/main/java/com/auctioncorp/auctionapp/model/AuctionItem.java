@@ -61,14 +61,14 @@ public class AuctionItem {
     }
 
     /**
-     * @return the currentBiid
+     * @return the currentBid
      */
     public Double getCurrentBid() {
         return currentBid;
     }
 
     /**
-     * @param currentBiid the currentBiid to set
+     * @param currentBid the currentBiid to set
      */
     public void setCurrentBid(Double currentBid) {
         this.currentBid = currentBid;

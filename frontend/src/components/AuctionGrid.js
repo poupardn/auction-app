@@ -18,7 +18,7 @@ class AuctionGrid extends Component {
             <div>
                 {this.state.auctionitems ? (
                     <div>
-                        <Grid container spacing={24} style={{ padding: 24 }}>
+                        <Grid container spacing={40} alignItems="flex-end">
                             {this.state.auctionitems.map(currentItem => (
                                 <Grid item xs={12} sm={6} lg={4} xl={3}>
                                     <Auction auctionitem={currentItem} />
