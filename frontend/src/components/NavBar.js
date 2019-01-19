@@ -7,6 +7,7 @@ import { Toolbar } from '@material-ui/core';
 import { Typography } from '@material-ui/core';
 import Button from '@material-ui/core/Button';
 import CssBaseline from '@material-ui/core/CssBaseline';
+import { Link } from 'react-router-dom'
 
 const styles = theme => ({
     '@global': {
@@ -31,9 +32,11 @@ const NavBar = (props) => {
                     <Typography variant="h6" color="inherit" noWrap className={classes.toolbarTitle}>
                         The Auction App
                     </Typography>
-                    <Button color="primary" variant="outlined">
-                        Login
-                    </Button>
+                    <Link to='/roster'>
+                        <Button color="primary" variant="outlined">
+                            Login
+                        </Button>
+                    </Link>
                 </Toolbar>
             </AppBar>
         </div>

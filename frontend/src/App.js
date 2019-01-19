@@ -7,6 +7,7 @@ import Auction from './components/Auction';
 import Bidder from './components/Bidder';
 import { Grid } from '@material-ui/core';
 import AuctionGrid from './components/AuctionGrid'
+import Main from './components/Main'
 
 class App extends Component {
 
@@ -15,8 +16,7 @@ class App extends Component {
     return (
       <div>
         <NavBar />
-        <Bidder />
-        <AuctionGrid />
+        <Main />
       </div >
       /* <div className="App">
       <header className="App-header">
