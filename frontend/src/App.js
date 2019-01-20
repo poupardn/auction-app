@@ -9,32 +9,14 @@ import { Grid } from '@material-ui/core';
 import AuctionGrid from './components/AuctionGrid'
 import Main from './components/Main'
 
-const theme = createMuiTheme({
-  palette: {
-    secondary: {
-      main: blue[900]
-    },
-    primary: {
-      main: indigo[700]
-    }
-  },
-  typography: {
-    // Use the system font instead of the default Roboto font.
-    fontFamily: [
-      '"Lato"',
-      'sans-serif'
-    ].join(',')
-  }
-});
-
-
 class App extends Component {
+
+
   render() {
     return (
       <div>
-        <MuiThemeProvider theme={theme}>
-          <Routes />
-        </MuiThemeProvider>
+        <NavBar />
+        <Main />
       </div >
       /* <div className="App">
       <header className="App-header">

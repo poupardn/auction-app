@@ -26,8 +26,7 @@ const styles = theme => ({
 const NavBar = (props) => {
     const { classes } = props;
     return (
-        <React.Fragment>
-            <CssBaseline />
+        <div className={classes.root}>
             <AppBar position="static" color="default" className={classes.appBar}>
                 <Toolbar>
                     <Typography variant="h6" color="inherit" noWrap className={classes.toolbarTitle}>
@@ -40,7 +39,7 @@ const NavBar = (props) => {
                     </Link>
                 </Toolbar>
             </AppBar>
-        </React.Fragment>
+        </div>
     );
 }
 
