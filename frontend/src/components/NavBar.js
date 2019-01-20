@@ -32,11 +32,17 @@ const NavBar = (props) => {
                     <Typography variant="h6" color="inherit" noWrap className={classes.toolbarTitle}>
                         The Auction App
                     </Typography>
-                    <Link to='/roster'>
-                        <Button color="primary" variant="outlined">
-                            Login
+                    {sessionStorage.getItem('bidderName') === null ? (
+                        <Link to='/login'>
+                            <Button color="primary" variant="outlined">
+                                Login
                         </Button>
-                    </Link>
+                        </Link>) : (
+                            <Typography variant="h6" color="inherit" noWrap>
+                                Signed in as: {sessionStorage.getItem('bidderName')}
+                            </Typography>
+                        )}
+
                 </Toolbar>
             </AppBar>
         </div>
