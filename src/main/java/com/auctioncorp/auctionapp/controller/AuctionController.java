@@ -6,10 +6,8 @@ import java.util.UUID;
 
 import com.auctioncorp.auctionapp.model.AuctionItem;
 import com.auctioncorp.auctionapp.model.Bid;
-import com.auctioncorp.auctionapp.model.Message;
 import com.auctioncorp.auctionapp.repository.AuctionRepository;
 import com.auctioncorp.auctionapp.repository.BidRepository;
-import com.auctioncorp.auctionapp.repository.MessageRepository;
 import com.google.common.collect.Lists;
 import com.google.common.collect.Ordering;
 import com.google.common.primitives.Doubles;
@@ -34,9 +32,6 @@ public class AuctionController {
     @Autowired
     BidRepository bidRepository;
 
-    @Autowired
-    MessageRepository messageRepository;
-
     public AuctionController() {
 
     }
@@ -56,18 +51,6 @@ public class AuctionController {
             throw new ResponseStatusException(HttpStatus.NOT_FOUND, "Auction Not Found");
         }
         return newItem.get();
-    }
-
-    @GetMapping("/messages/{bidderName}")
-    public Message getMessageById(@PathVariable String bidderName) {
-        Optional<Message> message = messageRepository.findById(bidderName);
-        return message.get();
-    }
-
-    @DeleteMapping("/messages/{bidderName}")
-    public void deleteMessageById(@PathVariable String bidderName) {
-        Optional<Message> message = messageRepository.findById(bidderName);
-        messageRepository.delete(message.get());
     }
 
     @PostMapping("/auctionitems")
@@ -124,7 +107,6 @@ public class AuctionController {
             }
             maxBid = currentBids.get(0);
             String maxBidder = "";
-            String outBid = "";
             Double currentMaxBid = maxBid.getMaxAutoBidAmount();
             // Now we make check to see if the maximum bid from the user is bigger than the
             // highest bidder's maximum. In either case, we increment the lower bid by 1.00
@@ -132,16 +114,12 @@ public class AuctionController {
             if (incomingMaxBid > currentMaxBid) {
                 currentBid = currentMaxBid + 1.00;
                 maxBidder = bid.getBidderName();
-                outBid = item.getCurrentBidder();
             } else {
                 currentBid = incomingMaxBid + 1.00;
                 maxBidder = item.getCurrentBidder();
-                outBid = bid.getBidderName();
             }
             // Now we save the bid to our repository. This serves as our "Audit log" for all
             // accepted bids.
-            Message message = new Message(outBid, "You've been outbid on item: " + item.getItem().getItemId());
-            messageRepository.save(message);
             bidRepository.save(bid);
             item.setCurrentBid(currentBid);
             item.setCurrentBidder(maxBidder);

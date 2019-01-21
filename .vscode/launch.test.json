@@ -1,0 +1,30 @@
+{
+    "run": {
+        "default": "",
+        "items": [
+            {
+                "name": "auction-app",
+                "projectName": "auction-app",
+                "workingDirectory": "c:\\Users\\poupa\\assignment\\auction-app",
+                "args": [],
+                "vmargs": [],
+                "env": {},
+                "preLaunchTask": ""
+            }
+        ]
+    },
+    "debug": {
+        "default": "",
+        "items": [
+            {
+                "name": "auction-app",
+                "projectName": "auction-app",
+                "workingDirectory": "c:\\Users\\poupa\\assignment\\auction-app",
+                "args": [],
+                "vmargs": [],
+                "env": {},
+                "preLaunchTask": ""
+            }
+        ]
+    }
+}

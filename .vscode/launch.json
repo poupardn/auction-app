@@ -9,6 +9,16 @@
             "mainClass": "com.auctioncorp.auctionapp.DemoApplication",
             "projectName": "auction-app",
             "args": ""
+        },
+        {
+            "type": "java",
+            "name": "Spring Boot-AuctionApplication<auction-app>",
+            "request": "launch",
+            "cwd": "${workspaceFolder}",
+            "console": "internalConsole",
+            "mainClass": "com.auctioncorp.auctionapp.AuctionApplication",
+            "projectName": "auction-app",
+            "args": ""
         }
     ]
 }

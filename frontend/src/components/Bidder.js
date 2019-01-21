@@ -1,11 +1,6 @@
 import React, { Component } from 'react';
-import { Button } from '@material-ui/core';
+import { Button, FormControl, Input, InputLabel, Paper, Typography } from '@material-ui/core';
 import CssBaseline from '@material-ui/core/CssBaseline';
-import FormControl from '@material-ui/core/FormControl';
-import Input from '@material-ui/core/Input';
-import InputLabel from '@material-ui/core/InputLabel';
-import Paper from '@material-ui/core/Paper';
-import Typography from '@material-ui/core/Typography';
 import withStyles from '@material-ui/core/styles/withStyles';
 import { Redirect } from 'react-router-dom';
 

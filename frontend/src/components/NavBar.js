@@ -1,12 +1,7 @@
 import React from 'react';
-import classNames from 'classnames';
 import PropTypes from 'prop-types';
 import { withStyles } from '@material-ui/core/styles';
-import { AppBar } from '@material-ui/core';
-import { Toolbar } from '@material-ui/core';
-import { Typography } from '@material-ui/core';
-import Button from '@material-ui/core/Button';
-import CssBaseline from '@material-ui/core/CssBaseline';
+import { AppBar, Toolbar, Typography, Button } from '@material-ui/core';
 import { Link } from 'react-router-dom';
 
 const styles = theme => ({

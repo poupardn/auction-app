@@ -1,11 +1,5 @@
 import React, { Component } from 'react';
-import { Card } from '@material-ui/core';
-import { CardContent } from '@material-ui/core';
-import { Typography } from '@material-ui/core';
-import { Grid } from '@material-ui/core';
-import { Button } from '@material-ui/core';
-import { CardActions } from '@material-ui/core';
-import { TextField } from '@material-ui/core';
+import { Card, CardContent, Typography, Grid, Button, CardActions, TextField } from '@material-ui/core';
 import { withStyles } from '@material-ui/core/styles';
 import axios from 'axios';
 
@@ -24,7 +18,8 @@ class Auction extends React.Component {
         super();
         this.state = {
             bidAmount: null,
-            error: false
+            error: false,
+            open: true,
         };
     }
 
@@ -39,12 +34,13 @@ class Auction extends React.Component {
         var bidAmount = parseFloat(this.state.bidAmount);
         var reservePrice = parseFloat(this.props.auctionitem.reservePrice);
         var currentBid = parseFloat(this.props.auctionitem.currentBid);
-
         if (bidAmount > currentBid) {
             axios.post('bids', {
                 auctionItemId: this.props.auctionitem.auctionItemId,
                 maxAutoBidAmount: bidAmount,
                 bidderName: sessionStorage.getItem('bidderName')
+            }).then(res => {
+                window.location.reload();
             }).catch((error) => {
                 var errorText = '';
                 if (error.response) {
@@ -57,6 +53,7 @@ class Auction extends React.Component {
                     errorText: errorText
                 });
                 this.forceUpdate();
+                return;
             });
         }
         else {
@@ -81,7 +78,7 @@ class Auction extends React.Component {
                                 Current Bid: ${this.props.auctionitem.currentBid}
                             </Typography>
                         </CardContent>
-                        {sessionStorage.getItem('bidderName') !== null ? (
+                        {sessionStorage.getItem('bidderName') !== this.props.auctionitem.currenBidder ? (
                             <CardActions>
                                 <form onSubmit={this.handleSubmit}>
                                     <Grid container spacing={24}>
