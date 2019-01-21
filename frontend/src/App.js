@@ -11,7 +11,7 @@ import Main from './components/Main'
 import { Snackbar, Button, IconButton, CloseButton } from '@material-ui/core'
 import PropTypes from 'prop-types';
 import { withStyles } from '@material-ui/core/styles';
-import { CloseIcon } from '@material-ui/icons';
+import { CloseIcon } from '@material-ui/icons/Close';
 const styles = theme => ({
   close: {
     padding: theme.spacing.unit / 2,
