@@ -7,7 +7,7 @@ import InputLabel from '@material-ui/core/InputLabel';
 import Paper from '@material-ui/core/Paper';
 import Typography from '@material-ui/core/Typography';
 import withStyles from '@material-ui/core/styles/withStyles';
-import { Redirect } from 'react-router-dom'
+import { Redirect } from 'react-router-dom';
 
 
 const styles = theme => ({
@@ -52,20 +52,20 @@ class Bidder extends React.Component {
     handleChange = (event) => {
         this.setState({
             bidderName: event.target.value
-        })
+        });
     }
 
     handleSubmit = (event) => {
         event.preventDefault();
         sessionStorage.setItem('bidderName', this.state.bidderName);
-        this.setState({ toHome: true })
+        this.setState({ toHome: true });
         this.forceUpdate();
     }
 
     render() {
         const { classes } = this.props;
         if (this.state.toHome === true) {
-            return <Redirect to='/' />
+            return (<Redirect to='/' />);
         }
         return (
 
@@ -96,7 +96,6 @@ class Bidder extends React.Component {
                 </main>
             </div>)
     }
-
 }
 
 export default withStyles(styles)(Bidder)

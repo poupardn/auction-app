@@ -7,7 +7,7 @@ import { Toolbar } from '@material-ui/core';
 import { Typography } from '@material-ui/core';
 import Button from '@material-ui/core/Button';
 import CssBaseline from '@material-ui/core/CssBaseline';
-import { Link } from 'react-router-dom'
+import { Link } from 'react-router-dom';
 
 const styles = theme => ({
     '@global': {
@@ -32,15 +32,18 @@ const NavBar = (props) => {
                     <Typography variant="h6" color="inherit" noWrap className={classes.toolbarTitle}>
                         The Auction App
                     </Typography>
+
                     {sessionStorage.getItem('bidderName') === null ? (
                         <Link to='/login'>
                             <Button color="primary" variant="outlined">
                                 Login
                         </Button>
                         </Link>) : (
-                            <Typography variant="h6" color="inherit" noWrap>
-                                Signed in as: {sessionStorage.getItem('bidderName')}
-                            </Typography>
+                            <Link to='/addauction'>
+                                <Button color="primary" variant="outlined">
+                                    Add Auction
+                                </Button>
+                            </Link>
                         )}
 
                 </Toolbar>
