@@ -73,7 +73,7 @@ public class AuctionController {
 
     @PostMapping("/bids")
     public String postBid(@RequestBody Bid bid) {
-        Double incomingMaxBid = bid.getMaxAutoBidAmount();
+        double incomingMaxBid = bid.getMaxAutoBidAmount();
         // Get the current auction item and bids. Ensure the auction exists and the
         // incoming max is greater than the reserve price.
         AuctionItem item = auctionRepository.findById(bid.getAuctionItemId()).get();
@@ -84,7 +84,7 @@ public class AuctionController {
             throw new ResponseStatusException(HttpStatus.BAD_REQUEST,
                     "Current Bid does not meet the item's reserved price.");
         }
-        Double currentBid = item.getCurrentBid();
+        double currentBid = item.getCurrentBid();
         List<Bid> currentBids = Lists.newArrayList(bidRepository.findByAuctionItemId(bid.getAuctionItemId()));
         // Check to make sure we have no keys. So, no bid key exists, or if one does
         // exist, then it's first element is null (redis "quirk")
@@ -97,28 +97,31 @@ public class AuctionController {
             // We have bids, so we need to find the maximum bid. If there is more than one
             // bid, we need to find the maximum bid of the current collection. Redis stores
             // the values in insertion order, so we use a sort.
-            Bid maxBid = new Bid();
+            Bid maxBid = new Bid("", 0.00, "");
             if (currentBids.size() != 1) {
 
                 Ordering<Bid> orderingByMaxBidAmount = new Ordering<Bid>() {
                     @Override
                     public int compare(Bid b1, Bid b2) {
-                        return Doubles.compare(b1.getMaxAutoBidAmount(), b2.getMaxAutoBidAmount());
+                        return Doubles.compare(b2.getMaxAutoBidAmount(), b1.getMaxAutoBidAmount());
                     }
                 };
                 currentBids.sort(orderingByMaxBidAmount);
             }
             maxBid = currentBids.get(0);
             String maxBidder = "";
-            Double currentMaxBid = maxBid.getMaxAutoBidAmount();
+            double currentMaxBid = maxBid.getMaxAutoBidAmount();
             // Now we make check to see if the maximum bid from the user is bigger than the
             // highest bidder's maximum. In either case, we increment the lower bid by 1.00
             // and set the current bid.
             if (incomingMaxBid > currentMaxBid) {
                 currentBid = currentMaxBid + 1.00;
                 maxBidder = bid.getBidderName();
-            } else {
+            } else if (incomingMaxBid < currentMaxBid) {
                 currentBid = incomingMaxBid + 1.00;
+                maxBidder = item.getCurrentBidder();
+            } else {
+                currentBid = currentMaxBid;
                 maxBidder = item.getCurrentBidder();
             }
             // Now we save the bid to our repository. This serves as our "Audit log" for all

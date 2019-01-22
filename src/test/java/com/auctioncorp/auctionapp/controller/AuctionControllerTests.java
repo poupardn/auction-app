@@ -151,9 +151,9 @@ public class AuctionControllerTests {
 
             ResponseEntity<String> response = restTemplate.exchange(getUrl("/bids"), HttpMethod.POST, entity,
                     String.class);
-            HttpStatus statusCode = response.getStatusCode();
 
             // Check status code
+            HttpStatus statusCode = response.getStatusCode();
             assertEquals(statusCode, HttpStatus.OK);
 
             // Ensure bid was written to the database
@@ -164,7 +164,137 @@ public class AuctionControllerTests {
 
             // check the current bid, should be equal to reserve price
             AuctionItem updateItem = auctionRepository.findById(auctionItemId).get();
-            assertEquals(updateItem.getCurrentBid(), item.getReservePrice());
+            assertEquals(updateItem.getCurrentBid(), item.getReservePrice(), 0.00);
+        } finally {
+            if (bids.size() > 0) {
+                bidRepository.deleteAll(bids);
+            }
+            auctionRepository.deleteById(auctionItemId);
+        }
+    }
+
+    @Test
+    public void didNotMeetReserveTest() {
+        String auctionItemId = UUID.randomUUID().toString();
+        List<Bid> bids = new ArrayList<Bid>();
+        try {
+            // Set up data
+            AuctionItem item = new AuctionItem(1000.00, new Item("test item", "a description"));
+            item.setAuctionItemId(auctionItemId);
+            auctionRepository.save(item);
+
+            // Set up Bid Request
+            JSONObject jsonObj = new JSONObject().put("auctionItemId", auctionItemId).put("maxAutoBidAmount", 500.00)
+                    .put("bidderName", "test bidder");
+            String reqJson = jsonObj.toString();
+            headers.setContentType(MediaType.APPLICATION_JSON);
+            HttpEntity<String> entity = new HttpEntity<String>(reqJson, headers);
+            ResponseEntity<String> response = restTemplate.exchange(getUrl("/bids"), HttpMethod.POST, entity,
+                    String.class);
+
+            // Check status code and message
+            HttpStatus statusCode = response.getStatusCode();
+            assertEquals(statusCode, HttpStatus.BAD_REQUEST);
+            JSONObject respJson = new JSONObject(response.getBody());
+            assertEquals(respJson.get("message"), "Current Bid does not meet the item's reserved price.");
+            // Ensure bid was written to the daabase
+            bids = bidRepository.findByAuctionItemId(auctionItemId);
+            assertEquals(0, bids.size());
+
+        } finally {
+            if (bids.size() > 0) {
+                bidRepository.deleteAll(bids);
+            }
+            auctionRepository.deleteById(auctionItemId);
+        }
+    }
+
+    @Test
+    /* Tests multiple Bid scenario where existing bidder has higher max bid */
+    public void multipleBidsDBHigher() {
+        String auctionItemId = UUID.randomUUID().toString();
+        List<Bid> bids = new ArrayList<Bid>();
+        try {
+            // Set up data
+            AuctionItem item = new AuctionItem(1000.00, new Item("test item", "a description"));
+            item.setAuctionItemId(auctionItemId);
+            item.setCurrentBid(1200.00);
+            item.setCurrentBidder("testBidder1");
+            auctionRepository.save(item);
+            Bid bid1 = new Bid(auctionItemId, 1500.00, "testBidder1");
+            // add some irrelevant bids to ensure sort in the Controller works.
+            Bid bid2 = new Bid(auctionItemId, 1100.00, "irrelevantBidder1");
+            Bid bid3 = new Bid(auctionItemId, 1150.00, "irrelevantBidder2");
+            bidRepository.save(bid1);
+            bidRepository.save(bid2);
+            bidRepository.save(bid3);
+            // Set up Intitial Bid Request
+            JSONObject jsonObj = new JSONObject().put("auctionItemId", auctionItemId).put("maxAutoBidAmount", 1250.00)
+                    .put("bidderName", "testBidder2");
+            String reqJson = jsonObj.toString();
+            headers.setContentType(MediaType.APPLICATION_JSON);
+            HttpEntity<String> entity = new HttpEntity<String>(reqJson, headers);
+            ResponseEntity<String> response = restTemplate.exchange(getUrl("/bids"), HttpMethod.POST, entity,
+                    String.class);
+
+            // Check status code
+            HttpStatus statusCode = response.getStatusCode();
+            assertEquals(statusCode, HttpStatus.OK);
+
+            // Check Bidder and Current bid amount
+            AuctionItem updateItem = auctionRepository.findById(auctionItemId).get();
+            assertEquals(updateItem.getCurrentBidder(), "testBidder1");
+            assertEquals(updateItem.getCurrentBid(), 1251.00, 0.00);
+
+            bids = bidRepository.findByAuctionItemId(auctionItemId);
+
+        } finally {
+            if (bids.size() > 0) {
+                bidRepository.deleteAll(bids);
+            }
+            auctionRepository.deleteById(auctionItemId);
+        }
+    }
+
+    @Test
+    /* Tests multiple Bid scenario where the incoming bidder has higher max bid */
+    public void multipleBidsIncomingHigher() {
+        String auctionItemId = UUID.randomUUID().toString();
+        List<Bid> bids = new ArrayList<Bid>();
+        try {
+            // Set up data
+            AuctionItem item = new AuctionItem(1000.00, new Item("test item", "a description"));
+            item.setAuctionItemId(auctionItemId);
+            item.setCurrentBid(1200.00);
+            item.setCurrentBidder("testBidder1");
+            auctionRepository.save(item);
+            Bid bid1 = new Bid(auctionItemId, 1250.00, "testBidder1");
+            // add some irrelevant bids to ensure sort in the Controller works.
+            Bid bid2 = new Bid(auctionItemId, 1100.00, "irrelevantBidder1");
+            Bid bid3 = new Bid(auctionItemId, 1150.00, "irrelevantBidder2");
+            bidRepository.save(bid1);
+            bidRepository.save(bid2);
+            bidRepository.save(bid3);
+            // Set up Intitial Bid Request
+            JSONObject jsonObj = new JSONObject().put("auctionItemId", auctionItemId).put("maxAutoBidAmount", 1500.00)
+                    .put("bidderName", "testBidder2");
+            String reqJson = jsonObj.toString();
+            headers.setContentType(MediaType.APPLICATION_JSON);
+            HttpEntity<String> entity = new HttpEntity<String>(reqJson, headers);
+            ResponseEntity<String> response = restTemplate.exchange(getUrl("/bids"), HttpMethod.POST, entity,
+                    String.class);
+
+            // Check status code
+            HttpStatus statusCode = response.getStatusCode();
+            assertEquals(statusCode, HttpStatus.OK);
+
+            // Check Bidder and Current bid amount
+            AuctionItem updateItem = auctionRepository.findById(auctionItemId).get();
+            assertEquals(updateItem.getCurrentBidder(), "testBidder2");
+            assertEquals(updateItem.getCurrentBid(), 1251.00, 0.00);
+
+            bids = bidRepository.findByAuctionItemId(auctionItemId);
+
         } finally {
             if (bids.size() > 0) {
                 bidRepository.deleteAll(bids);

@@ -8,12 +8,12 @@ public class AuctionItem {
     @Id
     private String auctionItemId;
 
-    private Double reservePrice = 0.00;
-    private Double currentBid = 0.00;
+    private double reservePrice = 0.00;
+    private double currentBid = 0.00;
     private String currentBidder;
     private Item item;
 
-    public AuctionItem(Double reservePrice, Item item) {
+    public AuctionItem(double reservePrice, Item item) {
         this.reservePrice = reservePrice;
         this.item = item;
     }
@@ -35,14 +35,14 @@ public class AuctionItem {
     /**
      * @return the reservePrice
      */
-    public Double getReservePrice() {
+    public double getReservePrice() {
         return reservePrice;
     }
 
     /**
      * @param reservePrice the reservePrice to set
      */
-    public void setReservePrice(Double reservePrice) {
+    public void setReservePrice(double reservePrice) {
         this.reservePrice = reservePrice;
     }
 
@@ -63,14 +63,14 @@ public class AuctionItem {
     /**
      * @return the currentBid
      */
-    public Double getCurrentBid() {
+    public double getCurrentBid() {
         return currentBid;
     }
 
     /**
      * @param currentBid the currentBiid to set
      */
-    public void setCurrentBid(Double currentBid) {
+    public void setCurrentBid(double currentBid) {
         this.currentBid = currentBid;
     }
 

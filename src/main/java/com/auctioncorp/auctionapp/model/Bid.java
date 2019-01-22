@@ -9,10 +9,16 @@ public class Bid {
 
     @Indexed
     private String auctionItemId;
-    private Double maxAutoBidAmount;
+    private double maxAutoBidAmount;
     private String bidderName;
     @Id
     private String id;
+
+    public Bid(String auctionItemId, double maxAutoBidAmount, String bidderName) {
+        this.auctionItemId = auctionItemId;
+        this.maxAutoBidAmount = maxAutoBidAmount;
+        this.bidderName = bidderName;
+    }
 
     /**
      * @return the auctionItemId
@@ -31,14 +37,14 @@ public class Bid {
     /**
      * @return the maxAutoBidAmount
      */
-    public Double getMaxAutoBidAmount() {
+    public double getMaxAutoBidAmount() {
         return maxAutoBidAmount;
     }
 
     /**
      * @param maxAutoBidAmount the maxAutoBidAmount to set
      */
-    public void setMaxAutoBidAmount(Double maxAutoBidAmount) {
+    public void setMaxAutoBidAmount(double maxAutoBidAmount) {
         this.maxAutoBidAmount = maxAutoBidAmount;
     }
 
