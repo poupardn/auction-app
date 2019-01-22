@@ -88,7 +88,7 @@ class AddAuction extends Component {
         axios.post('auctionitems', {
             reservePrice: Number(inputReservePrice),
             item: {
-                itemid: String(itemId),
+                itemId: String(itemId),
                 description: String(itemDescription)
             }
         });
@@ -99,7 +99,7 @@ class AddAuction extends Component {
     render() {
         const { classes } = this.props;
         if (this.state.toHome === true) {
-            return (<Redirect to='/' />);
+            return (<Redirect push to='/' />);
         }
         return (
             <main className={classes.layout}>
@@ -117,6 +117,7 @@ class AddAuction extends Component {
                                     label="Item Name/ID"
                                     fullWidth
                                     onChange={this.handleChange}
+                                    error={this.error}
                                     errorText={this.state.idErrorText}
                                 />
                             </Grid>
@@ -141,6 +142,7 @@ class AddAuction extends Component {
                                     fullWidth
                                     multiline
                                     onChange={this.handleChange}
+                                    error={this.error}
                                     errorText={this.state.descErrorText}
                                 />
                             </Grid>

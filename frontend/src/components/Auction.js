@@ -87,7 +87,7 @@ class Auction extends React.Component {
                                                 required
                                                 id="postBid"
                                                 name="postBid"
-                                                label="Post a bid"
+                                                label="Enter Max Bid"
                                                 fullWidth
                                                 autoComplete="postBid"
                                                 onChange={this.handleChange}
@@ -97,7 +97,7 @@ class Auction extends React.Component {
                                         </Grid>
                                         <Grid item xs={12} sm={6}>
                                             <Button type="submit" color="primary" variant="outlined" className={this.props.classes.button}>
-                                                Bid
+                                                Post Bid
                                     </Button>
                                         </Grid>
                                     </Grid>
