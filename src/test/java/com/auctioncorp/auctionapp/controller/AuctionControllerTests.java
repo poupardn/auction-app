@@ -4,6 +4,7 @@ import java.util.List;
 import java.util.ArrayList;
 import java.util.UUID;
 
+import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertNotNull;
 import static org.junit.Assert.assertTrue;
 import static org.junit.Assert.fail;
@@ -136,10 +137,13 @@ public class AuctionControllerTests {
         String auctionItemId = UUID.randomUUID().toString();
         List<Bid> bids = new ArrayList<Bid>();
         try {
+            // Set up data
             AuctionItem item = new AuctionItem(1000.00, new Item("test item", "a description"));
             item.setAuctionItemId(auctionItemId);
             auctionRepository.save(item);
-            JSONObject jsonObj = new JSONObject().put("auctionItemId", auctionItemId).put("maxAutoBidAmount", 1000.00)
+
+            // Set up Bid Request
+            JSONObject jsonObj = new JSONObject().put("auctionItemId", auctionItemId).put("maxAutoBidAmount", 2000.00)
                     .put("bidderName", "test bidder");
             String reqJson = jsonObj.toString();
             headers.setContentType(MediaType.APPLICATION_JSON);
@@ -148,11 +152,19 @@ public class AuctionControllerTests {
             ResponseEntity<String> response = restTemplate.exchange(getUrl("/bids"), HttpMethod.POST, entity,
                     String.class);
             HttpStatus statusCode = response.getStatusCode();
+
+            // Check status code
+            assertEquals(statusCode, HttpStatus.OK);
+
+            // Ensure bid was written to the database
             bids = bidRepository.findByAuctionItemId(auctionItemId);
             if (bids.size() != 1) {
                 fail("Incorrect number of bids");
             }
 
+            // check the current bid, should be equal to reserve price
+            AuctionItem updateItem = auctionRepository.findById(auctionItemId).get();
+            assertEquals(updateItem.getCurrentBid(), item.getReservePrice());
         } finally {
             if (bids.size() > 0) {
                 bidRepository.deleteAll(bids);

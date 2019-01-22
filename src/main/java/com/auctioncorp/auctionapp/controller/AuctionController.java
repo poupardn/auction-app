@@ -90,7 +90,7 @@ public class AuctionController {
         // exist, then it's first element is null (redis "quirk")
         if (currentBids == null || currentBids.size() == 0 || currentBids.get(0) == null) {
             bidRepository.save(bid);
-            item.setCurrentBid(currentBid);
+            item.setCurrentBid(item.getReservePrice());
             item.setCurrentBidder(bid.getBidderName());
             auctionRepository.save(item);
         } else {
