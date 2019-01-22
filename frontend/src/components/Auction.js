@@ -77,32 +77,36 @@ class Auction extends Component {
                             <Typography component="p">
                                 Current Bid: ${this.props.auctionitem.currentBid}
                             </Typography>
+                            {sessionStorage.getItem('bidderName') === this.props.auctionitem.currentBidder ? (
+                                <Typography component="p">
+                                    You are the highest bidder!
+                                </Typography>
+                            ) : null}
                         </CardContent>
-                        {sessionStorage.getItem('bidderName') !== this.props.auctionitem.currenBidder ? (
-                            <CardActions>
-                                <form onSubmit={this.handleSubmit}>
-                                    <Grid container spacing={24}>
-                                        <Grid item xs={12} sm={6}>
-                                            <TextField
-                                                required
-                                                id="postBid"
-                                                name="postBid"
-                                                label="Enter Max Bid"
-                                                fullWidth
-                                                autoComplete="postBid"
-                                                onChange={this.handleChange}
-                                                error={this.error}
-                                                helperText={this.state.errorText}
-                                            />
-                                        </Grid>
-                                        <Grid item xs={12} sm={6}>
-                                            <Button type="submit" color="primary" variant="outlined" className={this.props.classes.button}>
-                                                Post Bid
-                                    </Button>
-                                        </Grid>
+                        <CardActions>
+                            <form onSubmit={this.handleSubmit}>
+                                <Grid container spacing={24}>
+                                    <Grid item xs={12} sm={6}>
+                                        <TextField
+                                            required
+                                            id="postBid"
+                                            name="postBid"
+                                            label="Enter Max Bid"
+                                            fullWidth
+                                            autoComplete="postBid"
+                                            onChange={this.handleChange}
+                                            error={this.error}
+                                            helperText={this.state.errorText}
+                                        />
                                     </Grid>
-                                </form>
-                            </CardActions>) : null}
+                                    <Grid item xs={12} sm={6}>
+                                        <Button type="submit" color="primary" variant="outlined" className={this.props.classes.button}>
+                                            Post Bid
+                                    </Button>
+                                    </Grid>
+                                </Grid>
+                            </form>
+                        </CardActions>
                     </Card>
                 ) : null
                 }

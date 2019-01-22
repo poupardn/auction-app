@@ -3,7 +3,6 @@ package com.auctioncorp.auctionapp.controller;
 import java.util.List;
 import java.util.Optional;
 import java.util.UUID;
-import java.util.Map;
 
 import com.auctioncorp.auctionapp.model.AuctionItem;
 import com.auctioncorp.auctionapp.model.AuctionItemIdDTO;
@@ -17,7 +16,6 @@ import com.google.common.primitives.Doubles;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
-import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
@@ -93,7 +91,12 @@ public class AuctionController {
             item.setCurrentBid(item.getReservePrice());
             item.setCurrentBidder(bid.getBidderName());
             auctionRepository.save(item);
+        } else
+        // if the bidder simply increases their maximum bid, just save the new bid.
+        if (bid.getBidderName().equals(item.getCurrentBidder())) {
+            bidRepository.save(bid);
         } else {
+
             // We have bids, so we need to find the maximum bid. If there is more than one
             // bid, we need to find the maximum bid of the current collection. Redis stores
             // the values in insertion order, so we use a sort.
@@ -114,6 +117,7 @@ public class AuctionController {
             // Now we make check to see if the maximum bid from the user is bigger than the
             // highest bidder's maximum. In either case, we increment the lower bid by 1.00
             // and set the current bid.
+
             if (incomingMaxBid > currentMaxBid) {
                 currentBid = currentMaxBid + 1.00;
                 maxBidder = bid.getBidderName();
