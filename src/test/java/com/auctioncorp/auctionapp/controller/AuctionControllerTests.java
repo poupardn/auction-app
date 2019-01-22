@@ -67,9 +67,7 @@ public class AuctionControllerTests {
             ResponseEntity<String> response = restTemplate.exchange(getUrl("/auctionitems/" + auctionItemId),
                     HttpMethod.GET, entity, String.class);
             JSONObject respJson = new JSONObject(response.getBody());
-            // This is probably slow on large datasets, but Redis stores hash items in
-            // insertion order. Worst case you could also supply a different
-            // configuration for the tests.
+
             assertTrue(respJson.getString("auctionItemId").equals(auctionItemId));
         } finally {
             auctionRepository.deleteById(auctionItemId);
