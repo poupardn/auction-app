@@ -85,8 +85,7 @@ public class AuctionController {
                     "Current Bid does not meet the item's reserved price.");
         }
         Double currentBid = item.getCurrentBid();
-        List<Bid> currentBids = Lists.newArrayList(bidRepository.findAll());
-        bid.setBidId(UUID.randomUUID().toString());
+        List<Bid> currentBids = Lists.newArrayList(bidRepository.findByAuctionItemId(bid.getAuctionItemId()));
         // Check to make sure we have no keys. So, no bid key exists, or if one does
         // exist, then it's first element is null (redis "quirk")
         if (currentBids == null || currentBids.size() == 0 || currentBids.get(0) == null) {

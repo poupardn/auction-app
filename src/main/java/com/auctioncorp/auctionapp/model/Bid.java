@@ -1,16 +1,18 @@
 package com.auctioncorp.auctionapp.model;
 
 import org.springframework.data.annotation.Id;
+import org.springframework.data.redis.core.index.Indexed;
 import org.springframework.data.redis.core.RedisHash;
 
 @RedisHash("bids")
 public class Bid {
 
-    @Id
+    @Indexed
     private String auctionItemId;
     private Double maxAutoBidAmount;
     private String bidderName;
-    private String bidId;
+    @Id
+    private String id;
 
     /**
      * @return the auctionItemId
@@ -55,17 +57,17 @@ public class Bid {
     }
 
     /**
-     * @return the bidId
+     * @return the id
      */
-    public String getBidId() {
-        return bidId;
+    public String id() {
+        return id;
     }
 
     /**
-     * @param bidId the bidId to set
+     * @param id the bidId to set
      */
-    public void setBidId(String bidId) {
-        this.bidId = bidId;
+    public void setId(String id) {
+        this.id = id;
     }
 
 }

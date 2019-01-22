@@ -13,6 +13,7 @@ import com.auctioncorp.auctionapp.repository.AuctionRepository;
 import com.auctioncorp.auctionapp.repository.BidRepository;
 import com.auctioncorp.auctionapp.model.AuctionItem;
 import com.auctioncorp.auctionapp.model.Item;
+import com.auctioncorp.auctionapp.model.Bid;
 
 import org.json.JSONObject;
 import org.junit.Before;
@@ -29,6 +30,7 @@ import org.springframework.http.HttpMethod;
 import org.springframework.http.ResponseEntity;
 import org.springframework.test.context.junit4.SpringRunner;
 import org.springframework.http.MediaType;
+import org.springframework.http.HttpStatus;
 import org.springframework.core.ParameterizedTypeReference;
 
 @RunWith(SpringRunner.class)
@@ -126,6 +128,36 @@ public class AuctionControllerTests {
                     fail();
                 }
             }
+        }
+    }
+
+    @Test
+    public void singleBidTest() {
+        String auctionItemId = UUID.randomUUID().toString();
+        List<Bid> bids = new ArrayList<Bid>();
+        try {
+            AuctionItem item = new AuctionItem(1000.00, new Item("test item", "a description"));
+            item.setAuctionItemId(auctionItemId);
+            auctionRepository.save(item);
+            JSONObject jsonObj = new JSONObject().put("auctionItemId", auctionItemId).put("maxAutoBidAmount", 1000.00)
+                    .put("bidderName", "test bidder");
+            String reqJson = jsonObj.toString();
+            headers.setContentType(MediaType.APPLICATION_JSON);
+            HttpEntity<String> entity = new HttpEntity<String>(reqJson, headers);
+
+            ResponseEntity<String> response = restTemplate.exchange(getUrl("/bids"), HttpMethod.POST, entity,
+                    String.class);
+            HttpStatus statusCode = response.getStatusCode();
+            bids = bidRepository.findByAuctionItemId(auctionItemId);
+            if (bids.size() != 1) {
+                fail("Incorrect number of bids");
+            }
+
+        } finally {
+            if (bids.size() > 0) {
+                bidRepository.deleteAll(bids);
+            }
+            auctionRepository.deleteById(auctionItemId);
         }
     }
 }
