@@ -12,7 +12,7 @@ const styles = theme => ({
     },
 });
 
-class Auction extends React.Component {
+class Auction extends Component {
 
     constructor() {
         super();
