@@ -3,8 +3,11 @@ package com.auctioncorp.auctionapp.controller;
 import java.util.List;
 import java.util.Optional;
 import java.util.UUID;
+import java.util.Map;
 
 import com.auctioncorp.auctionapp.model.AuctionItem;
+import com.auctioncorp.auctionapp.model.AuctionItemIdDTO;
+
 import com.auctioncorp.auctionapp.model.Bid;
 import com.auctioncorp.auctionapp.repository.AuctionRepository;
 import com.auctioncorp.auctionapp.repository.BidRepository;
@@ -37,7 +40,7 @@ public class AuctionController {
     }
 
     @GetMapping("/auctionitems")
-    public List<AuctionItem> getAllAuctions() {
+    public @ResponseBody List<AuctionItem> getAllAuctions() {
         List<AuctionItem> auctions = Lists.newArrayList(auctionRepository.findAll());
         return auctions;
     }
@@ -55,7 +58,7 @@ public class AuctionController {
 
     @PostMapping("/auctionitems")
     @ResponseBody
-    public String addAuctionItem(@RequestBody AuctionItem item) {
+    public AuctionItemIdDTO addAuctionItem(@RequestBody AuctionItem item) {
         item.setAuctionItemId(UUID.randomUUID().toString());
         auctionRepository.save(item);
         // Rather than just return the Id, we should ensure we actually saved it.
@@ -64,7 +67,8 @@ public class AuctionController {
             throw new ResponseStatusException(HttpStatus.NOT_FOUND,
                     "Auction was unable to be added. A database error occurred.");
         }
-        return newItem.get().getAuctionItemId();
+        // Use DTO to return only the ID string.
+        return new AuctionItemIdDTO(newItem.get().getAuctionItemId());
     }
 
     @PostMapping("/bids")
